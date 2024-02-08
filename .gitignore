@@ -1,3 +1,7 @@
 *.svg
 *.blend1
 
+**/output/.gitignore
+**/config/.gitignore
+
+original_code.js
