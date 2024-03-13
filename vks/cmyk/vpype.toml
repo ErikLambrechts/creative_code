@@ -1,0 +1,20 @@
+[gwrite.my_own_plotter]
+unit = "mm"
+document_start = "M3 G21\n"
+layer_start = "(Start Layer)\n"
+line_start = """
+(Start Block)
+"""
+segment_first = """
+G00 X{x:.4f}f Y{y:.4f}
+G01 Z-1 F12000
+"""
+segment = """G01 X{x:.4f} Y{y:.4f} \n"""
+segment_last = """
+G01 X{x:.4f} Y{y:.4f} 
+G01 Z1 F12000
+"""
+line_end = """G00 Z1.0000"""
+document_end = """M5
+M2"""
+invert_y = false

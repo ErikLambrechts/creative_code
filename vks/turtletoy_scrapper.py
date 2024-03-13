@@ -93,13 +93,6 @@ urls = [
     r"https://turtletoy.net/turtle/0479c0d1c9",
 ]
 
-# List of URLs
-urls = [
-    r"https://turtletoy.net/turtle/716fcbfa5b",
-    r"https://turtletoy.net/turtle/fa14c628d4",
-    r"https://turtletoy.net/turtle/4f0f7579c8",
-]
-
 for url in urls:
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
