@@ -5,3 +5,4 @@
 **/config/.gitignore
 
 original_code.js
+**/*.gcode
