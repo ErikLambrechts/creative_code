@@ -1,0 +1,10 @@
+[package]
+name = "fish_pond"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+itertools = "0.13.0"
+rand = "0.8.5"
+serde = { version = "1.0.207", features = ["derive"] }
+whiskers = "0.4.0"
