@@ -1,7 +1,7 @@
 import vsketch
 
 
-class TmpSketch(vsketch.SketchClass):
+class FishSketch(vsketch.SketchClass):
     # Sketch parameters:
     # radius = vsketch.Param(2.0)
 
@@ -17,4 +17,4 @@ class TmpSketch(vsketch.SketchClass):
 
 
 if __name__ == "__main__":
-    TmpSketch.display()
+    FishSketch.display()
