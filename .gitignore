@@ -6,3 +6,11 @@
 
 original_code.js
 **/*.gcode
+
+
+# rust
+**/debug/
+**/target/
+**/Cargo.lock
+**/*.rs.bk
+whiskers/fish_pond/.vscode/launch.json
