@@ -1,0 +1,11 @@
+
+[gwrite.plotbot]
+document_start = "G21\nG17\nG90\nG00 Z1\n"
+segment_first = "G00 X{x:.4f} Y{y:.4f}\nG00 Z-1\n"
+segment = "G00 X{x:.4f} Y{y:.4f}\n"
+line_end = "G00 Z1\n"
+document_end = "M2\n"
+unit = "mm"
+[tmp]
+vertical_flip = true
+info= "This gcode profile is correctly inverted across the y-axis"
