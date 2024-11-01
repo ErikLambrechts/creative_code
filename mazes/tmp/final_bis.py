@@ -1,17 +1,30 @@
 from itertools import combinations
+import json
 import math
-import random
 import shapely
+from shapely import affinity
 from shapely.plotting import plot_polygon, plot_points
 from matplotlib import pyplot as plt
 import numpy as np
 from shapely import LineString, MultiLineString, Point, line_merge, unary_union, ops
 
+import textwrap
+import os
+import sys
+import inspect
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+
+from maze_generators.maze.organic_growth_maze import OrganicGrowthMaze as OGMaze
+
 class Graph:
     def __init__(self):
         self.points = []  # List of 2D points, e.g., [(x1, y1), (x2, y2), ...]
         self.edges = []   # List of edges as tuples of point indices, e.g., [(0, 1), (1, 2), ...]
-        self.d = 0.1
+        self.d = 0.045
 
     def add_point(self, point):
         """Add a point to the graph and return its index."""
@@ -139,8 +152,6 @@ class Graph:
                     # Temporarily add the neighbor to the subgraph and check the area
                     tmp_edges = subgraph_edges + [[current_point, neighbor]]
                         
-
-                    print(current_point,neighbor)
                     if bridge:
                         landing_bridge = self.buffer_graph(current_point)
                         landing_free = shapely.disjoint(landing_bridge, sub_graph_buffer_total)
@@ -376,6 +387,12 @@ edges = [
 #     [2, 3],
 # ]
 
+with open("jsons/rdm.json") as f:
+    maze = OGMaze.from_json(json.loads(f.read()))
+
+points = maze.nodes
+edges = maze.connections
+
 for point in points:
     graph.add_point(point)
     
@@ -387,7 +404,7 @@ for edge in edges:
 threshold = .1
 
 # Enforce the threshold
-graph.enforce_edge_threshold(threshold)
+# graph.enforce_edge_threshold(threshold)
 
 subgraphs = graph.divide_graph()
 
@@ -514,8 +531,45 @@ for contour in contours:
     col = (np.random.random(), np.random.random(), np.random.random())
     ax.plot(*contour.xy, color=col, linewidth=4)
 
+contours = [c for c in contours if c.is_empty == False]
+area = MultiLineString(contours)
 
-    
-    
+area = affinity.scale(area, xfact=200, yfact=200)
+with open('test_OGM_03.svg', 'w') as f:
+    #specify margin in coordinate units
+    margin = 5
+
+    bbox = list(area.bounds)
+    bbox[0] -= margin
+    bbox[1] -= margin
+    bbox[2] += margin
+    bbox[3] += margin
+
+    width = bbox[2] - bbox[0]
+    height = bbox[3] - bbox[1]
+
+    #transform each coordinate unit into "scale" pixels
+    scale = 10
+
+    props = {
+        'version': '1.1',
+        'baseProfile': 'full',
+        'width': '{width:.0f}px'.format(width = width*scale),
+        'height': '{height:.0f}px'.format(height = height*scale),
+        'viewBox': '%.1f,%.1f,%.1f,%.1f' % (bbox[0], bbox[1], width, height),
+        'xmlns': 'http://www.w3.org/2000/svg',
+        'xmlns:ev': 'http://www.w3.org/2001/xml-events',
+        'xmlns:xlink': 'http://www.w3.org/1999/xlink'
+    }
+
+    f.write(textwrap.dedent(r'''
+        <?xml version="1.0" encoding="utf-8" ?>
+        <svg {attrs:s}>
+        {data:s}
+        </svg>
+    ''').format(
+        attrs = ' '.join(['{key:s}="{val:s}"'.format(key = key, val = props[key]) for key in props]),
+        data = area.svg()
+    ).strip())
 
 plt.show()

@@ -57,6 +57,8 @@ to_gcode() {
         linemerge \
         gwrite -p plotbot $1.gcode
 } 
+# front "1, 16, 13, 4, 8, 9, 12, 5, 20, 21, 24, 17"
+# back "3, 14, 15, 2, 9, 11, 10, 7, 18, 23, 22, 19"
 
 to_gcode ${1:-./}/front
 to_gcode ${1:-./}/back
