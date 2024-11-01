@@ -1,14 +1,13 @@
 from abc import abstractmethod
-from dataclasses import dataclass, field
 import json
-from typing import List, Optional
 
 import numpy as np
+
 class Maze:
-    def __init__(self, nodes=None, graph=None, vertices=None, faces=None):
+    def __init__(self, nodes=None, connections=None, vertices=None, faces=None):
         self.name = "Indexed Maze"
         self.nodes = nodes
-        self.graph = graph
+        self.connections = connections
 
 
     @property
@@ -16,11 +15,13 @@ class Maze:
         return len(self.nodes)
 
     def to_json(self):
+        if isinstance(self.nodes, np.ndarray):
+            self.nodes = self.nodes.tolist()
         d = {
             "class": self.__class__.__name__,
             "name": self.name,
             "nodes": self.nodes,
-            "graph": self.graph,
+            "connections": self.connections,
         }
         return json.dumps(d, indent=2)
 
@@ -34,11 +35,11 @@ class Maze:
                 json_string["nr_col"],
                 json_string["nr_row"],
             )
-            maze.graph = json_string["graph"]
+            maze.connections = json_string["connections"],
         else:
             maze = Maze(
                 json_string["nodes"],
-                json_string["graph"],
+                json_string["connections"],
             )
 
         return maze
@@ -47,13 +48,11 @@ class Maze:
         with open(f"jsons/"+filename, "w") as f:
             f.write(self.to_json())
 
-    def graph_contains_edge(self, edge):
+    def contains_connection(self, edge):
         edge = (edge[0], edge[1])
         edge_reversed = (edge[1], edge[0])
-        return (edge in self.graph) or (edge_reversed in self.graph)
+        return (edge in self.connections) or (edge_reversed in self.connections)
     
-
-
     @abstractmethod
     def possible_edges(self):
         pass

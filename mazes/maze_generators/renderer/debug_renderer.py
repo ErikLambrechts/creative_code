@@ -64,7 +64,7 @@ def debug_render_maze(maze: 'Maze', width: int = 500, height: int = 500) -> str:
         svg.append(f'<text class="label" x="{x + 8}" y="{y + 5}">C{i}</text>')  # Label the centroid
 
     # Step 5: Render the graph edges (centroid connections)
-    for start_idx, end_idx in maze.graph:
+    for start_idx, end_idx in maze.connections:
         start_centroid = maze.nodes[start_idx]
         end_centroid = maze.nodes[end_idx]
         x1, y1 = scale_point(start_centroid, width, height)
