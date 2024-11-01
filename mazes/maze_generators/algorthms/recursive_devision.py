@@ -1,12 +1,9 @@
 import json
 import random
 
-from .maze.base import RectangularMaze as Maze
+from ..maze.base import RectangularMaze as Maze
 
 def generate_recursive_division_maze(width, height, maze=None, offset_x=0, offset_y=0):
-    if maze is None:
-        maze = Maze(width, height)
-        maze.fill()
     
 
     print("=====")
@@ -52,4 +49,10 @@ def generate_recursive_division_maze(width, height, maze=None, offset_x=0, offse
         if width - r_ > 2:
             generate_recursive_division_maze(width - r_ - 1, height, maze, offset_x+r_+1, offset_y)
         
+    return maze
+
+def generate(width, height):
+    maze = Maze(width, height)
+    maze.fill_graph()
+    generate_recursive_division_maze(height, width, maze, 0, 0)
     return maze

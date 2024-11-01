@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from dataclasses import dataclass, field
 import json
 from typing import List, Optional
@@ -28,6 +29,7 @@ class Vertex:
     @property
     def y(self):
         return self.coordinates[1]
+
 
 
 @dataclass
@@ -112,6 +114,10 @@ class Maze:
             faces = []
         self.faces = faces
 
+    @property
+    def nr_nodes(self):
+        return len(self.centroids)
+
     def to_json(self):
         d = {
             "name": self.name,
@@ -137,7 +143,7 @@ class Maze:
         return maze
 
     def to_file(self, filename):
-        with open("jsons/"+filename, "w") as f:
+        with open(f"jsons/"+filename, "w") as f:
             f.write(self.to_json())
         
     def bounding_box(self):
@@ -158,9 +164,16 @@ class Maze:
 
 
     def graph_contains_edge(self, edge):
+
+        edge = (edge[0], edge[1])
         edge_reversed = (edge[1], edge[0])
-        return (list(edge) in self.graph) or (list(edge_reversed) in self.graph)
+        return (edge in self.graph) or (edge_reversed in self.graph)
     
+
+
+    @abstractmethod
+    def possible_edges(self):
+        pass
         
 
 class RectangularMaze(Maze):
@@ -177,15 +190,26 @@ class RectangularMaze(Maze):
         vertices = []
         faces = []
 
-        super().__init__(centroids, graph, vertices, faces)
+        
 
-    def fill(self):
+
+        super().__init__(centroids, graph, vertices, faces)
+        self.init_mesh()
+
+
+    @property
+    def shape(self):
+        return self.nr_row, self.nr_col
+
+    def fill_graph(self):
         self.graph = [
             (i, i+1) for i in range(self.nr_col*self.nr_row-1) if (i+1) % self.nr_col != 0
         ]
 
         for i in range(self.nr_col*self.nr_row-self.nr_col):
             self.graph.append((i, i+self.nr_col))
+
+    def init_mesh(self):
 
 
         for y in range(self.nr_row + 1):
@@ -197,6 +221,7 @@ class RectangularMaze(Maze):
                 self.new_face( [y*(self.nr_col+1)+x, y*(self.nr_col+1)+x+1, (y+1)*(self.nr_col+1)+x+1, (y+1)*(self.nr_col+1)+x])
         
 
+    
     def __getitem__(self, pos):
         x,y = pos
         return y*self.nr_col+x
@@ -208,8 +233,11 @@ class RectangularMaze(Maze):
         for y in range(h).__reversed__():
             s += '   '
             for x in range(w):
-                s += '+'
-                if (self[x,y], self[x+1,y]) in self.graph:
+                if self[x,y] < 10:
+                    s+= str(self[x,y])
+                else:
+                    s += '+'
+                if self.graph_contains_edge((self[x,y], self[x+1,y])):
                     s += '--'
                 else:
                     s += '  '
@@ -218,7 +246,7 @@ class RectangularMaze(Maze):
                 break
             s += f'{y-1:2d} '
             for x in range(w):
-                if (self[x,y-1], self[x,y]) in self.graph:
+                if self.graph_contains_edge((self[x,y], self[x+1,y])):
                     s += '|'
                 else:
                     s += ' '
@@ -232,3 +260,18 @@ class RectangularMaze(Maze):
 
         return s
     
+    def possible_edges(self):
+        possiblle_edges = np.zeros((self.nr_col*self.nr_row, self.nr_col*self.nr_row), dtype=bool)
+        width = self.nr_col
+        height = self.nr_row
+        for x in range(0, width):
+            for y in range(0, height):
+                
+                if x < width - 1:
+                    possiblle_edges[self[x,y], self[x+1,y]] = 1
+                if y < height - 1:
+                    possiblle_edges[self[x,y], self[x,y+1]] = 1
+                    
+
+        possiblle_edges = possiblle_edges + possiblle_edges.T
+        return possiblle_edges
