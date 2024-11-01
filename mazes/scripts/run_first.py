@@ -25,7 +25,7 @@ maze.to_file("rdm.json")
 import json
 from maze_generators.renderer.path import path
 from maze_generators.renderer.debug_renderer import debug_render
-from maze_generators.maze.base import Maze
+from maze_generators.maze.maze import Maze
 
 
 with open("jsons/rdm.json") as f:

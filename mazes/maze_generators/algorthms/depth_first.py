@@ -1,7 +1,7 @@
 import json
 import random
 
-from ..maze.base import RectangularMaze as Maze
+from ..maze.maze import RectangularMaze as Maze
 
 import numpy as np
 import matplotlib.pyplot as plt

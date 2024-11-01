@@ -3,7 +3,7 @@
 
 import numpy as np
 from .maze_mesh import MazeMesh
-from .base import Maze
+from .maze import Maze
 
 
 class RectangularMaze(Maze):

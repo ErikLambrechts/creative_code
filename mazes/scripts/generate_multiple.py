@@ -10,7 +10,7 @@ sys.path.insert(0, parentdir)
 
 from maze_generators.algorthms import depth_first
 from maze_generators.renderer.simple import simple_outline
-from maze_generators.maze.base import Maze
+from maze_generators.maze.maze import Maze
 
 index = 0
 for i in range(5,21):

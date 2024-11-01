@@ -103,7 +103,7 @@ class Loop:
         return self.maze.vertices[self.vertex_index]
 
 class MazeMesh:
-    def __init__(self, maze, vertices, graph, faces):
+    def __init__(self, maze, vertices, faces):
         self.maze = maze
         self.init_mesh(vertices, faces)
 
