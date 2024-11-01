@@ -1,6 +1,7 @@
 
 
 
+import json
 import numpy as np
 from .maze_mesh import MazeMesh
 from .maze import Maze
@@ -18,7 +19,6 @@ class RectangularMaze(Maze):
 
         graph = []
         super().__init__(nodes, graph)
-        self.init_mesh()
 
 
     @property
@@ -100,3 +100,14 @@ class RectangularMaze(Maze):
 
         possiblle_edges = possiblle_edges + possiblle_edges.T
         return possiblle_edges
+
+    def to_json(self):
+        d = {
+            "class": self.__class__.__name__,
+            "name": self.name,
+            "nodes": self.nodes,
+            "graph": self.graph,
+            "nr_col": self.nr_col,
+            "nr_row": self.nr_row,
+        }
+        return json.dumps(d, indent=2)

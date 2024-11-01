@@ -64,7 +64,7 @@ class Loop:
     vertex_next_index: int
     face: 'Face'
     # edge: Edge                 # The edge this loop is part of
-    maze: 'Maze' = None  # type: ignore # Reference to the parent Maze, set by the update method
+    maze_mesh: 'Maze' = None  # type: ignore # Reference to the parent Maze, set by the update method
 
     @property
     def next_loop(self):
@@ -76,8 +76,8 @@ class Loop:
     
     @property
     def opposite_loop(self):
-        reversed_loop = Loop(self.vertex_next_index, self.vertex_index, None, self.maze)
-        for f in self.maze.faces:
+        reversed_loop = Loop(self.vertex_next_index, self.vertex_index, None, self.maze_mesh)
+        for f in self.maze_mesh.faces:
             if f.contains_loop(reversed_loop):
                 reversed_loop.face = f
                 return reversed_loop
@@ -95,12 +95,12 @@ class Loop:
         opposite_centroid_index = self.opposite_loop.face.index
         
         # Check if the tuple (current_centroid, opposite_centroid) or (opposite_centroid, current_centroid) is in the graph
-        return  ( [ current_centroid_index, opposite_centroid_index ] in self.maze.graph or \
-               [ opposite_centroid_index, current_centroid_index ] in self.maze.graph)
+        return  ( [ current_centroid_index, opposite_centroid_index ] in self.maze_mesh.maze.graph or \
+               [ opposite_centroid_index, current_centroid_index ] in self.maze_mesh.maze.graph)
 
     @property
     def coor(self):
-        return self.maze.vertices[self.vertex_index]
+        return self.maze_mesh.vertices[self.vertex_index]
 
 class MazeMesh:
     def __init__(self, maze, vertices, faces):

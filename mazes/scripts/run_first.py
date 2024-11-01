@@ -24,18 +24,18 @@ maze.to_file("rdm.json")
 
 import json
 from maze_generators.renderer.path import path
-from maze_generators.renderer.debug_renderer import debug_render
+from maze_generators.renderer.debug_renderer import debug_render_maze
 from maze_generators.maze.maze import Maze
 
 
 with open("jsons/rdm.json") as f:
     maze = Maze.from_json(json.loads(f.read()))
 
-renderer = debug_render(maze, width=500, height=500)
+renderer = debug_render_maze(maze, width=500, height=500)
 with open(f"output/AA_debug_tmp.svg", "w") as svg_file:
     svg_file.write(renderer)
 
-renderer = simple_outline(maze, width=500, height=500, loops_skip=True)
+renderer = simple_outline(maze.to_maze_mesh(), width=500, height=500, loops_skip=True)
 with open(f"output/AA_simple_outline.svg", "w") as svg_file:
     svg_file.write(renderer)
     

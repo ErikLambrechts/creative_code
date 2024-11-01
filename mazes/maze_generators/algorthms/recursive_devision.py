@@ -1,7 +1,7 @@
 import json
 import random
 
-from ..maze.maze import RectangularMaze as Maze
+from ..maze.rectangular_maze import RectangularMaze as Maze
 
 def generate_recursive_division_maze(width, height, maze=None, offset_x=0, offset_y=0):
     

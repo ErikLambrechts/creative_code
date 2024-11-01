@@ -90,7 +90,7 @@ def simple_path(maze: 'Maze', width: int = 500, height: int = 500) -> str:
     return "\n".join(svg)
 
 
-def simple_outline(maze: 'Maze', width: int = 500, height: int = 500, loops_skip=None) -> str:
+def simple_outline(maze: 'Mazemesh', width: int = 500, height: int = 500, loops_skip=None) -> str:
 
     if loops_skip is None:
         loops_skip = []

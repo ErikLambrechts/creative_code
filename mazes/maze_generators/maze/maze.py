@@ -17,6 +17,7 @@ class Maze:
 
     def to_json(self):
         d = {
+            "class": self.__class__.__name__,
             "name": self.name,
             "nodes": self.nodes,
             "graph": self.graph,
@@ -25,10 +26,20 @@ class Maze:
 
     @staticmethod
     def from_json(json_string):
-        maze = Maze(
-            json_string["centroids"],
-            json_string["graph"],
-        )
+        json_string["class"]
+
+        if json_string["class"] == "RectangularMaze":
+            from .rectangular_maze import RectangularMaze
+            maze = RectangularMaze(
+                json_string["nr_col"],
+                json_string["nr_row"],
+            )
+            maze.graph = json_string["graph"]
+        else:
+            maze = Maze(
+                json_string["nodes"],
+                json_string["graph"],
+            )
 
         return maze
 
