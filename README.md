@@ -8,4 +8,16 @@ than it goes to a pipeline vpype and bCNC
 
 # gallery
 
+## mazes
+
+### depth first 
+
 ![](./gallery/40_simple.svg)
+
+## vpype
+
+### booklet
+
+![](./gallery/front.svg)
+![](./gallery/back.svg)
+
