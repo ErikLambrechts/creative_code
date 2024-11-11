@@ -211,7 +211,7 @@ def path_to_shapely(path, num_points=20):
         index_to_remove = []
         for index,shape in enumerate(shapes):
             if shape.contains(p):
-                shape = shape.difference(p)
+                p = shape.difference(p)
                 index_to_remove.append(index)
             if p.contains(shape):
                 p = p.difference(shape)
@@ -304,8 +304,7 @@ class TextToShapely:
 text_to_shapely = TextToShapely()
 
 letters = []
-# for i, a in enumerate("0123456789!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"):
-for i, a in enumerate("BBB"):
+for i, a in enumerate("0123456789!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"):
     row = i // 10
     col = i % 10
     x = col * 2500
