@@ -53,10 +53,6 @@ def parse_svg_for_paths(element, namespaces, path_elements=None, parent_transfor
         # if new_paths:
         #     print(new_paths[0][0].point(0))
         paths_to_draw.extend(new_paths)
-        if paths_to_draw:
-            print(element.tag)
-            for path in paths_to_draw:
-                print(path[0].point(0))
 
     return paths_to_draw.copy()
 
@@ -212,23 +208,19 @@ def path_to_shapely(path, num_points=20):
     shapes = []
     for contour in contours:
         p = Polygon(contour)
-        hole = False
+        index_to_remove = []
         for index,shape in enumerate(shapes):
             if shape.contains(p):
                 shape = shape.difference(p)
-                hole = True
-                shapes[index] = shape
-                continue
+                index_to_remove.append(index)
             if p.contains(shape):
                 p = p.difference(shape)
-                hole = True
-                shapes[index] = p
-                continue
-        if not hole:
-            shapes.append(p)
+                index_to_remove.append(index)
+        shapes.append(p)
+        shapes = [shape for index,shape in enumerate(shapes) if index not in index_to_remove]
     # Separate outer boundary and holes
     if len(shapes) == 1:
-        return Polygon(contours[0])
+        return Polygon(shapes[0])
     else:
         # Sort contours by area to determine the outer boundary and holes
         return shapely.MultiPolygon(shapes)
@@ -287,7 +279,6 @@ def to_svg(area_list, view_box=None, file_path='test.svg'):
             </svg>
         ''')
         f.write(svg_data.strip())
-        print(svg_data.strip())
 
 svg_string = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -483 1260 2384" transform="matrix(1 0 0 0 -1 0)">
 <defs>
@@ -299,21 +290,9 @@ svg_string = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -483 1260 238
 </svg>'''
 
 from vharfbuzz import Vharfbuzz
-vhb = Vharfbuzz('../fonts/vera_sans/Vera.ttf')
-buf = vhb.shape('Erik')
-# buf = vhb.shape('....')
-
-svg_string = vhb.buf_to_svg(buf)
-
-
-print(svg_string)
-
-open('test_og.svg', 'w').write(svg_string)
-# Convert SVG to Shapely geometry
-shapely_objects = parse_svg(svg_string)
 
 class TextToShapely:
-    def __init__(self, font='../fonts/vera_sans/Vera.ttf', font_size=100):
+    def __init__(self, font='./fonts/vera_sans/Vera.ttf', font_size=100):
         self.vhb = Vharfbuzz(font)
 
     def __call__(self, text):
@@ -325,9 +304,10 @@ class TextToShapely:
 text_to_shapely = TextToShapely()
 
 letters = []
-for i, a in enumerate("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"):
-    row = i // 5
-    col = i % 5
+# for i, a in enumerate("0123456789!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"):
+for i, a in enumerate("BBB"):
+    row = i // 10
+    col = i % 10
     x = col * 2500
     y = row * 2500
 
@@ -337,7 +317,7 @@ for i, a in enumerate("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"):
     
     letters.append(letter)
     
-    print(i, a)
+    # print(i, a)
     
 # Convert Shapely geometry to SVG
 
