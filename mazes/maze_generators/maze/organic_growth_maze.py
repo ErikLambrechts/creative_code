@@ -51,7 +51,8 @@ class OrganicGrowthMaze(Maze):
             forces = np.zeros_like(self.nodes)
             forces += self.connection_force()
             forces += self.reple_force()
-            forces += self.contour_force()
+            if iteration % 10 == 9:
+                forces += self.contour_force()
 
             self.update_positions(forces, dt)
 

@@ -26,17 +26,17 @@ def create_torus(inner_radius, outer_radius, resolution=100):
     return Polygon(outer_circle + inner_circle[::-1])
 
 
-torus_polygon = create_torus(inner_radius=0.5, outer_radius=1.5)
-nr_points = 40
+torus_polygon = create_torus(inner_radius=0.4, outer_radius=1.5)
+nr_points = 50
 fixed_points = {0: (-1.5, 0), nr_points - 1: (1.5, 0)}
 maze = OGMaze(
     nr_points=nr_points, fixed_points=fixed_points, boundary_polygon=torus_polygon
 )
 
-maze.min_distance = 0.10
-maze.k_repulsion = 5
+maze.min_distance = 0.20
+maze.k_repulsion = 10
 
-maze.simulate(num_iterations=1200, dt=0.12)
+maze.simulate(num_iterations=2000, dt=0.12)
 
 maze.to_file("rdm.json")
 
