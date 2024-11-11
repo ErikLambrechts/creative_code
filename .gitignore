@@ -19,5 +19,5 @@ whiskers/fish_pond/.vscode/launch.json
 *.pyc
 fonts/**/*
 plotter_art_utils/src/plotter_art_utils.egg-info/*
-plotter_art_utils/dist/*
-plotter_art_utils/build/*
+plotter_art_utils/dist
+plotter_art_utils/build
