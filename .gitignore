@@ -17,3 +17,4 @@ whiskers/fish_pond/.vscode/launch.json
 
 # python
 *.pyc
+fonts/**/*
